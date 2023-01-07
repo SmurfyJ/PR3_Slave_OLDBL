@@ -2,11 +2,11 @@
 #include <util/twi.h>
 
 void adc_init();
-
 uint16_t adc_read();
-
 void ERROR();
 
+uint16_t data_out = 0;
+uint8_t SLA_W = 2;
 
 int main() {
 
@@ -14,10 +14,7 @@ int main() {
     adc_init();
 
     //Slave Adresse
-    uint8_t SLA_W = 2;
     TWAR = SLA_W << 1;
-
-    //uint16_t data_out = 0;
 
     while (1) {
 
@@ -30,8 +27,8 @@ int main() {
         // Status ueberpruefen: Eigene Adresse empfangen
         if (TW_STATUS != TW_ST_SLA_ACK) ERROR();
 
-        // Daten senden, NACK erwarten (weil letztes Paket)
-        uint16_t data_out = adc_read();
+        // Daten senden, ACK erwarten (weil nicht letztes Paket)
+        data_out = adc_read();
         TWDR = (data_out >> 8);
         TWCR = (1 << TWINT) | (1 << TWEA) | (1 << TWEN);
 

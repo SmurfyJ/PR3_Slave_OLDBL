@@ -2,7 +2,9 @@
 #include <util/twi.h>
 
 void adc_init();
+
 uint16_t adc_read();
+
 void ERROR();
 
 
